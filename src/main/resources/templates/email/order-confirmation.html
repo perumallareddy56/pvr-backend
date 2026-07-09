@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your PVR Order Confirmation</title>
+    <style>
+        body { margin: 0; padding: 0; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; background-color: #f4f4f5; color: #333333; -webkit-font-smoothing: antialiased; }
+        .wrapper { width: 100%; table-layout: fixed; background-color: #f4f4f5; padding-bottom: 60px; }
+        .main { max-width: 600px; margin: 0 auto; background-color: #ffffff; border-radius: 8px; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.05); margin-top: 40px; }
+        
+        .header { background-color: #0c0a09; padding: 35px 40px; text-align: center; }
+        .header h1 { margin: 0; color: #d4af37; font-size: 28px; letter-spacing: 2px; text-transform: uppercase; font-weight: bold; }
+        .header p { margin: 5px 0 0; color: #a1a1aa; font-size: 13px; text-transform: uppercase; letter-spacing: 4px; }
+        
+        .hero { padding: 40px 40px 20px; text-align: center; }
+        .hero-icon { width: 64px; height: 64px; background-color: #fef9c3; border-radius: 50%; display: inline-block; line-height: 64px; font-size: 28px; margin-bottom: 20px; color: #ca8a04; }
+        .hero h2 { margin: 0 0 10px; font-size: 24px; color: #18181b; }
+        .hero p { margin: 0; font-size: 15px; color: #52525b; line-height: 1.6; }
+        
+        .order-meta { background-color: #fafafa; margin: 0 40px 30px; padding: 20px; border-radius: 8px; border: 1px solid #e4e4e7; }
+        .meta-table { width: 100%; border-collapse: collapse; }
+        .meta-table td { padding: 8px 0; font-size: 14px; }
+        .meta-label { color: #71717a; font-weight: 500; width: 40%; }
+        .meta-value { color: #18181b; font-weight: bold; text-align: right; }
+        
+        .items-section { padding: 0 40px 30px; }
+        .items-section h3 { font-size: 16px; margin: 0 0 15px; border-bottom: 1px solid #e4e4e7; padding-bottom: 10px; color: #18181b; }
+        .items-table { width: 100%; border-collapse: collapse; }
+        .items-table th { text-align: left; padding: 10px 0; font-size: 12px; color: #71717a; text-transform: uppercase; border-bottom: 1px solid #e4e4e7; }
+        .items-table td { padding: 15px 0; border-bottom: 1px solid #f4f4f5; font-size: 14px; color: #3f3f46; }
+        .item-name { font-weight: 600; color: #18181b; display: block; margin-bottom: 4px; }
+        .item-meta { font-size: 12px; color: #71717a; }
+        .text-right { text-align: right; }
+        
+        .totals-section { padding: 0 40px 40px; }
+        .totals-table { width: 100%; border-collapse: collapse; }
+        .totals-table td { padding: 10px 0; font-size: 14px; color: #52525b; text-align: right; }
+        .totals-table td:first-child { text-align: left; }
+        .totals-table .grand-total { border-top: 2px solid #e4e4e7; font-size: 18px; font-weight: bold; color: #18181b; padding-top: 15px; margin-top: 5px; }
+        
+        .action { text-align: center; padding: 0 40px 40px; }
+        .action-btn { background-color: #0c0a09; color: #ffffff; text-decoration: none; padding: 15px 35px; border-radius: 5px; font-weight: bold; font-size: 15px; display: inline-block; text-transform: uppercase; letter-spacing: 1px; }
+        
+        .footer { background-color: #f4f4f5; text-align: center; padding: 40px 20px; color: #a1a1aa; font-size: 12px; line-height: 1.5; }
+        .footer a { color: #71717a; text-decoration: underline; }
+    </style>
+</head>
+<body>
+    <div class="wrapper">
+        <div class="main">
+            <!-- Header -->
+            <div class="header">
+                <h1>PVR</h1>
+                <p>Gourmet Essentials</p>
+            </div>
+            
+            <!-- Hero -->
+            <div class="hero">
+                <div class="hero-icon">✓</div>
+                <h2 th:text="'Order Confirmed, ' + ${userName}">Order Confirmed, Customer</h2>
+                <p>Thank you for choosing PVR. Your order has been successfully placed and is currently being prepared for dispatch by our premium fulfillment center.</p>
+            </div>
+            
+            <!-- Default Fallbacks for optional DTO fields if they exist -->
+            <div th:with="paymentMethod=${order.paymentMethod != null ? order.paymentMethod : 'Secure Online Payment'}, status=${order.status != null ? order.status : 'PROCESSING'}, date=${order.createdAt != null ? order.createdAt : 'Just now'}">
+                <div class="order-meta">
+                    <table class="meta-table">
+                        <tr>
+                            <td class="meta-label">Order Number</td>
+                            <td class="meta-value" th:text="'#PVR-' + ${order.id}">#PVR-001234</td>
+                        </tr>
+                        <tr>
+                            <td class="meta-label">Order Status</td>
+                            <td class="meta-value" th:text="${status}" style="color: #ca8a04;">PROCESSING</td>
+                        </tr>
+                        <tr>
+                            <td class="meta-label">Payment Method</td>
+                            <td class="meta-value" th:text="${paymentMethod}">Credit Card</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+            
+            <!-- Order Items -->
+            <div class="items-section">
+                <h3>Order Summary</h3>
+                <table class="items-table">
+                    <thead>
+                        <tr>
+                            <th>Item Details</th>
+                            <th class="text-right">Qty</th>
+                            <th class="text-right">Price</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="item : ${order.items}">
+                            <td style="width: 60%;">
+                                <span class="item-name" th:text="${item.productName}">Premium Grade Spices</span>
+                                <span class="item-meta" th:text="'₹' + ${#numbers.formatDecimal(item.priceAtPurchase, 1, 2)} + ' each'">₹499.00 each</span>
+                            </td>
+                            <td class="text-right" th:text="${item.quantity}">1</td>
+                            <td class="text-right font-weight-bold" style="color: #18181b;" th:text="'₹' + ${#numbers.formatDecimal(item.subTotal, 1, 2)}">₹499.00</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            
+            <!-- Subtotals -->
+            <div class="totals-section">
+                <table class="totals-table">
+                    <tr>
+                        <td>Subtotal</td>
+                        <td th:text="'₹' + ${#numbers.formatDecimal(order.totalAmount, 1, 2)}">₹499.00</td>
+                    </tr>
+                    <tr>
+                        <td>Shipping & Handling</td>
+                        <td>Free</td>
+                    </tr>
+                    <tr>
+                        <td>Taxes</td>
+                        <td>Included</td>
+                    </tr>
+                    <tr>
+                        <td class="grand-total">Total Amount</td>
+                        <td class="grand-total" style="color: #d4af37;" th:text="'₹' + ${#numbers.formatDecimal(order.totalAmount, 1, 2)}">₹499.00</td>
+                    </tr>
+                </table>
+            </div>
+            
+            <!-- Call to Action -->
+            <div class="action">
+                <a th:href="${frontendUrl} + '/orders'" class="action-btn">View Order History</a>
+                <p style="margin-top: 20px; font-size: 13px; color: #71717a;">You will receive another email once your items have shipped.</p>
+            </div>
+        </div>
+        
+        <!-- Footer -->
+        <div class="footer">
+            <p>Need help? Contact our support team at <a href="mailto:support@pvrprimenaturals.com">support@pvrprimenaturals.com</a></p>
+            <p>© 2026 PVR Gourmet Essentials. All rights reserved.<br>
+            Indiranagar, Bengaluru, India</p>
+            <p style="margin-top: 15px; font-size: 11px;">This email was sent from a notification-only address that cannot accept incoming email. Please do not reply to this message.</p>
+        </div>
+    </div>
+</body>
+</html>
