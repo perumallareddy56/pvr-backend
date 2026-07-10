@@ -318,7 +318,7 @@ public class ShippingDataInitializer implements CommandLineRunner {
             jdbcTemplate.update("UPDATE products SET image_url = REPLACE(image_url, '/images/', '/assets/products/') WHERE image_url LIKE '/images/%'");
             // Update S3 direct URLs to use the secure /api/upload/files/ proxy endpoint
             jdbcTemplate.update("UPDATE products SET image_url = REPLACE(image_url, 'https://pvr-prime-naturals-app.s3.eu-north-1.amazonaws.com/', '/api/upload/files/') WHERE image_url LIKE 'https://pvr-prime-naturals-app.s3.eu-north-1.amazonaws.com/%'");
-            jdbcTemplate.update("UPDATE board_members SET image_url = REPLACE(image_url, 'https://pvr-prime-naturals-app.s3.eu-north-1.amazonaws.com/', '/api/upload/files/') WHERE image_url LIKE 'https://pvr-prime-naturals-app.s3.eu-north-1.amazonaws.com/%'");
+            jdbcTemplate.update("UPDATE board_members SET image_url = NULL WHERE image_url LIKE '%/files/%' OR image_url LIKE '%amazonaws.com%'");
             log.info("Migrated product and board member image_url paths in database to correct public folder and proxy paths");
         } catch (Exception e) {
             log.error("Failed to run product/board member image_url database path migrations: {}", e.getMessage());
