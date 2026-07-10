@@ -26,7 +26,11 @@ public class RazorpayService {
     @PostConstruct
     public void init() throws RazorpayException {
         System.out.println("DEBUG: Initializing Razorpay Client with Key ID: " + keyId);
-        this.client = new RazorpayClient(keyId, keySecret);
+        if (keyId != null && !keyId.isBlank() && !keyId.equals("changeme")) {
+            this.client = new RazorpayClient(keyId, keySecret);
+        } else {
+            System.err.println("Razorpay credentials are not configured. RazorpayService will not be functional.");
+        }
     }
  
     public Map<String, Object> createOrder(BigDecimal amount) throws RazorpayException {

@@ -24,7 +24,7 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
     public void registerStompEndpoints(StompEndpointRegistry registry) {
         String[] origins = allowedOrigins != null && !allowedOrigins.isBlank()
                 ? allowedOrigins.split(",")
-                : new String[]{"https://pvr-prime-naturals-fe.vercel.app", "http://localhost:5173"};
+                : new String[]{"https://pvr-prime-naturals-fe.vercel.app", "https://pvr-dk7i4n35v-pradeep21.vercel.app", "https://pvr-prime-naturals-l8lbi3del-pradeep21.vercel.app", "http://localhost:5173"};
 
         registry.addEndpoint("/ws")
                 .setAllowedOrigins(origins)

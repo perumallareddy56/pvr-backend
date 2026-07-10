@@ -28,7 +28,7 @@ import jakarta.annotation.PostConstruct;
 @EnableMethodSecurity
 public class WebSecurityConfig {
 
-    private static final String DEFAULT_ALLOWED_ORIGINS = "https://pvr-prime-naturals-fe.vercel.app";
+    private static final String DEFAULT_ALLOWED_ORIGINS = "https://pvr-prime-naturals-fe.vercel.app,https://pvr-dk7i4n35v-pradeep21.vercel.app,https://pvr-prime-naturals-l8lbi3del-pradeep21.vercel.app";
 
     @Value("${app.cors.allowed-origins:}")
     private String allowedOrigins;
@@ -77,33 +77,29 @@ public class WebSecurityConfig {
         return new BCryptPasswordEncoder();
     }
 
-
-
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.csrf(csrf -> csrf.disable())
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .exceptionHandling(exception -> exception.authenticationEntryPoint(unauthorizedHandler))
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .authorizeHttpRequests(auth ->
-                        auth.requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
-                                .requestMatchers("/api/auth/**").permitAll()
-                                .requestMatchers("/api/products/**").permitAll()
-                                .requestMatchers("/api/categories/**").permitAll()
-                                .requestMatchers("/api/reviews/**").permitAll()
-                                .requestMatchers("/api/pincodes/check/**").permitAll()
-                                .requestMatchers("/api/pincodes/reverse-geocode").permitAll()
-                                .requestMatchers(org.springframework.http.HttpMethod.GET, "/api/locations").permitAll()
-                                .requestMatchers(org.springframework.http.HttpMethod.GET, "/api/social-links").permitAll()
-                                .requestMatchers(org.springframework.http.HttpMethod.GET, "/api/faqs").permitAll()
-                                .requestMatchers(org.springframework.http.HttpMethod.GET, "/api/board-members").permitAll()
-                                .requestMatchers("/api/upload/**").permitAll()
-                                .requestMatchers("/api/test/**").permitAll()
-                                .requestMatchers("/error").permitAll()
-                                .requestMatchers("/ws/**").permitAll()
-                                .requestMatchers("/actuator/health").permitAll()
-                                .anyRequest().authenticated()
-                );
+                .authorizeHttpRequests(auth -> auth.requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+                        .requestMatchers("/api/auth/**").permitAll()
+                        .requestMatchers("/api/products/**").permitAll()
+                        .requestMatchers("/api/categories/**").permitAll()
+                        .requestMatchers("/api/reviews/**").permitAll()
+                        .requestMatchers("/api/pincodes/check/**").permitAll()
+                        .requestMatchers("/api/pincodes/reverse-geocode").permitAll()
+                        .requestMatchers(org.springframework.http.HttpMethod.GET, "/api/locations").permitAll()
+                        .requestMatchers(org.springframework.http.HttpMethod.GET, "/api/social-links").permitAll()
+                        .requestMatchers(org.springframework.http.HttpMethod.GET, "/api/faqs").permitAll()
+                        .requestMatchers(org.springframework.http.HttpMethod.GET, "/api/board-members").permitAll()
+                        .requestMatchers("/api/upload/**").permitAll()
+                        .requestMatchers("/api/test/**").permitAll()
+                        .requestMatchers("/error").permitAll()
+                        .requestMatchers("/ws/**").permitAll()
+                        .requestMatchers("/actuator/health").permitAll()
+                        .anyRequest().authenticated());
 
         http.authenticationProvider(authenticationProvider());
 

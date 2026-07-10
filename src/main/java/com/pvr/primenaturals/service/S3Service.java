@@ -33,6 +33,10 @@ public class S3Service {
 
     @PostConstruct
     public void init() {
+        if (accessKey == null || accessKey.isBlank() || secretKey == null || secretKey.isBlank()) {
+            System.err.println("AWS S3 credentials are not configured. S3Service will not be functional.");
+            return;
+        }
         AwsBasicCredentials credentials = AwsBasicCredentials.create(accessKey, secretKey);
         this.s3Client = S3Client.builder()
                 .region(Region.of(region))
@@ -41,6 +45,9 @@ public class S3Service {
     }
 
     public String uploadFile(MultipartFile file) throws IOException {
+        if (s3Client == null) {
+            throw new IllegalStateException("AWS S3 client is not initialized due to missing credentials.");
+        }
         String originalFilename = file.getOriginalFilename();
         String extension = "";
         if (originalFilename != null && originalFilename.contains(".")) {
@@ -61,6 +68,9 @@ public class S3Service {
     }
 
     public software.amazon.awssdk.core.ResponseInputStream<software.amazon.awssdk.services.s3.model.GetObjectResponse> getFile(String fileName) {
+        if (s3Client == null) {
+            throw new IllegalStateException("AWS S3 client is not initialized due to missing credentials.");
+        }
         software.amazon.awssdk.services.s3.model.GetObjectRequest getObjectRequest = software.amazon.awssdk.services.s3.model.GetObjectRequest.builder()
                 .bucket(bucketName)
                 .key(fileName)
