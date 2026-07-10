@@ -1,9 +1,11 @@
 package com.pvr.primenaturals.service;
 
+import com.pvr.primenaturals.dto.request.PasswordChangeRequest;
 import com.pvr.primenaturals.dto.response.UserResponseDTO;
 import com.pvr.primenaturals.entity.User;
 import com.pvr.primenaturals.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -12,6 +14,9 @@ public class UserService {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     public UserResponseDTO getUserProfile(Long id) {
         User user = userRepository.findById(id)
@@ -33,6 +38,19 @@ public class UserService {
 
         User updatedUser = userRepository.save(user);
         return mapToResponseDTO(updatedUser);
+    }
+
+    @Transactional
+    public void changePassword(Long id, PasswordChangeRequest request) {
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("User not found with id: " + id));
+
+        if (!passwordEncoder.matches(request.getCurrentPassword(), user.getPassword())) {
+            throw new IllegalArgumentException("Current password does not match!");
+        }
+
+        user.setPassword(passwordEncoder.encode(request.getNewPassword()));
+        userRepository.save(user);
     }
 
     private UserResponseDTO mapToResponseDTO(User user) {

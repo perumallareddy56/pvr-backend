@@ -52,12 +52,19 @@ public class S3Service {
                 .bucket(bucketName)
                 .key(fileName)
                 .contentType(file.getContentType())
-                .acl(software.amazon.awssdk.services.s3.model.ObjectCannedACL.PUBLIC_READ)
                 .build();
 
         s3Client.putObject(putObjectRequest, RequestBody.fromInputStream(file.getInputStream(), file.getSize()));
 
         // Return the public URL to the uploaded object
         return "https://" + bucketName + ".s3." + region + ".amazonaws.com/" + fileName;
+    }
+
+    public software.amazon.awssdk.core.ResponseInputStream<software.amazon.awssdk.services.s3.model.GetObjectResponse> getFile(String fileName) {
+        software.amazon.awssdk.services.s3.model.GetObjectRequest getObjectRequest = software.amazon.awssdk.services.s3.model.GetObjectRequest.builder()
+                .bucket(bucketName)
+                .key(fileName)
+                .build();
+        return s3Client.getObject(getObjectRequest);
     }
 }

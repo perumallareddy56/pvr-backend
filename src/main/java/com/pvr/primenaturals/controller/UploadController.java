@@ -27,13 +27,34 @@ public class UploadController {
 
         try {
             String fileDownloadUri = s3Service.uploadFile(file);
+            String actualFileName = fileDownloadUri.substring(fileDownloadUri.lastIndexOf("/") + 1);
 
             Map<String, String> response = new HashMap<>();
-            response.put("url", fileDownloadUri);
+            response.put("url", "/api/upload/files/" + actualFileName);
 
             return ResponseEntity.ok(response);
         } catch (Exception ex) {
             return ResponseEntity.badRequest().body("Could not upload file " + fileName + " to S3. Please try again! Error: " + ex.getMessage());
+        }
+    }
+
+    @GetMapping("/files/{fileName}")
+    public ResponseEntity<?> getFile(@PathVariable String fileName) {
+        try {
+            var stream = s3Service.getFile(fileName);
+            byte[] bytes = stream.readAllBytes();
+
+            String contentType = "image/jpeg";
+            if (fileName.toLowerCase().endsWith(".png")) contentType = "image/png";
+            else if (fileName.toLowerCase().endsWith(".gif")) contentType = "image/gif";
+            else if (fileName.toLowerCase().endsWith(".svg")) contentType = "image/svg+xml";
+            else if (fileName.toLowerCase().endsWith(".webp")) contentType = "image/webp";
+
+            return ResponseEntity.ok()
+                    .header(org.springframework.http.HttpHeaders.CONTENT_TYPE, contentType)
+                    .body(bytes);
+        } catch (Exception ex) {
+            return ResponseEntity.notFound().build();
         }
     }
 

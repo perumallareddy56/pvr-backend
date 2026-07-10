@@ -12,13 +12,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.core.io.ResourceLoader;
-import org.springframework.stereotype.Component;
 
 import java.io.InputStream;
 import java.util.List;
 import java.util.Map;
 
-@Component
+// @Component
 public class ProductDataInitializer implements CommandLineRunner {
 
     private static final Logger log = LoggerFactory.getLogger(ProductDataInitializer.class);

@@ -4,6 +4,7 @@ import com.pvr.primenaturals.entity.Role;
 import com.pvr.primenaturals.entity.User;
 import com.pvr.primenaturals.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
@@ -19,12 +20,14 @@ public class SecurityDataInitializer implements CommandLineRunner {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
+    @Value("${app.admin.email:admin@gmail.com}")
+    private String adminEmail;
+
+    @Value("${app.admin.password:admin123}")
+    private String adminPass;
+
     @Override
     public void run(String... args) throws Exception {
-        // Create default admin if not exists
-        String adminEmail = "admin@gmail.com";
-        String adminPass = "admin123";
-
         if (!userRepository.existsByEmail(adminEmail)) {
             User admin = User.builder()
                     .name("Admin")

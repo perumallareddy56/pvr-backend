@@ -35,17 +35,9 @@ public class PincodeDataInitializer implements CommandLineRunner {
         );
 
         for (ServiceablePincode pin : initialPincodes) {
-            serviceablePincodeRepository.findByPincode(pin.getPincode())
-                .ifPresentOrElse(
-                    existing -> {
-                        existing.setCodAvailable(pin.isCodAvailable());
-                        existing.setEstimatedDays(pin.getEstimatedDays());
-                        existing.setDeliveryCharge(pin.getDeliveryCharge());
-                        existing.setServiceable(pin.isServiceable());
-                        serviceablePincodeRepository.save(existing);
-                    },
-                    () -> serviceablePincodeRepository.save(pin)
-                );
+            if (!serviceablePincodeRepository.findByPincode(pin.getPincode()).isPresent()) {
+                serviceablePincodeRepository.save(pin);
+            }
         }
         log.info("Successfully synced {} serviceable pincodes.", initialPincodes.size());
     }
