@@ -28,7 +28,7 @@ import jakarta.annotation.PostConstruct;
 @EnableMethodSecurity
 public class WebSecurityConfig {
 
-    private static final String DEFAULT_ALLOWED_ORIGINS = "https://pvr-prime-naturals-fe.vercel.app,https://pvr-dk7i4n35v-pradeep21.vercel.app,https://pvr-prime-naturals-l8lbi3del-pradeep21.vercel.app";
+    private static final String DEFAULT_ALLOWED_ORIGINS = "https://pvr-prime-naturals.vercel.app,https://pvr-prime-naturals-fe.vercel.app,https://pvr-dk7i4n35v-pradeep21.vercel.app,https://pvr-prime-naturals-l8lbi3del-pradeep21.vercel.app";
 
     @Value("${app.cors.allowed-origins:}")
     private String allowedOrigins;
